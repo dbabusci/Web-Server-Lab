@@ -1,36 +1,26 @@
-#import socket module
 from socket import *
-import sys #In order to terminate the program
+import sys 
 
 serverSocket = socket(AF_INET, SOCK_STREAM)
-#Prepare a server socket
-#--> Fill in Start
-#--> Fill in end
+serverSocket.bind(("10.5.1.146", 8000))
+serverSocket.listen(5)
+print("before true")
 while True:
-    #Establish the connection
     print('Ready to serve...')
-    connectionSocket, addr =#Fill in start and end
+    connectionSocket, addr = serverSocket.accept()
     try:
-        message = #Fill in start and end
+        print("in try")
+        message = connectionSocket.recv(1024)
         filename = message.split()[1]
         f = open(filename[1:])
-        outputdata = #Fill in start and end
-        #send one http header line into socket
-        #-->Fill in start
-        #-->Fill in end
-        #Send the content of the requested file to the client
+        outputdata = f.read()
+        connectionSocket.send(b'HTTP/1.1 200 OK\r\n\r\n')#expects bits not string
         for i in range(0, len(outputdata)):
             connectionSocket.send(outputdata[i].encode())
         connectionSocket.send("\r\n".encode())
-
         connectionSocket.close()
     except IOError:
-        print("placeholda")
-        #Send response message for file not found
-        #-->Fill in start
-        #-->Fill in end
-        #Close Client socket
-        #-->Fill in start
-        #-->Fill in end
+        print("File not found")
+        connectionSocket.close()
 serverSocket.close()
 sys.exit()
